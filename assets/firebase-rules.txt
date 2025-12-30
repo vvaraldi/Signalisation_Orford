@@ -1,0 +1,45 @@
+// ========================================
+// FIREBASE RULES - SIGNALISATION COLLECTION
+// ========================================
+// Add these rules to your existing Firebase rules configuration
+// (inside the match /databases/{database}/documents block)
+
+// Collection signalisations
+match /signalisations/{signalisationId} {
+  // Read: authenticated users only
+  allow read: if request.auth != null;
+  
+  // Create: authenticated users with allowSignalisation access
+  allow create: if request.auth != null &&
+      get(/databases/$(database)/documents/inspectors/$(request.auth.uid)).data.allowSignalisation == true;
+  
+  // Update: owner can update their own reports, admin can update any
+  allow update: if request.auth != null && 
+      (request.auth.uid == resource.data.inspectorId || 
+      get(/databases/$(database)/documents/inspectors/$(request.auth.uid)).data.role == 'admin');
+  
+  // Delete: admin only (though deletion is not allowed in the UI)
+  allow delete: if request.auth != null &&
+      get(/databases/$(database)/documents/inspectors/$(request.auth.uid)).data.role == 'admin';
+}
+
+// ========================================
+// STORAGE RULES - SIGNALISATION PHOTOS
+// ========================================
+// These should already be covered by your existing storage rules
+// Photos are stored in: signalisations/{userId}/{timestamp}_{filename}
+
+// If you need to add specific rules for signalisation photos:
+// match /signalisations/{userId}/{allPaths=**} {
+//   allow read: if true;  // Public read for photos
+//   allow write: if request.auth != null && request.auth.uid == userId;
+//   allow delete: if request.auth != null && 
+//       (request.auth.uid == userId ||
+//        firestore.get(/databases/(default)/documents/inspectors/$(request.auth.uid)).data.role == 'admin');
+// }
+
+// ========================================
+// INSPECTOR FIELD TO ADD
+// ========================================
+// Add this field to your inspectors collection documents:
+// allowSignalisation: boolean (true to grant access)

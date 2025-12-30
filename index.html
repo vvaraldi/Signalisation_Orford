@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signalisation - Mont Orford</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚧</text></svg>">
+  <style>
+    /* Portal link styling */
+    .portal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+      text-decoration: none !important;
+    }
+    .portal-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .portal-logo {
+      width: 20px;
+      height: 20px;
+      opacity: 0.9;
+    }
+    .nav-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 0 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-logo">🚧 Signalisation</div>
+      <div class="nav-links">
+        <a href="index.html" class="active">Rapport</a>
+        <a href="pages/admin.html" id="admin-link" style="display: none;">Admin</a>
+        <a href="#" id="login-link">Connexion</a>
+        <!-- Portal Link -->
+        <span class="nav-divider" id="portal-divider"></span>
+        <a href="https://vvaraldi.github.io/Orford_Patrouille/index.html" 
+           id="portal-link" 
+           class="portal-link" 
+           title="Retour au menu principal">
+          <svg class="portal-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+            <path d="M100 0 L200 200 L0 200 Z" fill="currentColor"/>
+          </svg>
+          Menu principal
+        </a>
+      </div>
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+    </nav>
+    
+    <!-- Mobile menu -->
+    <div class="mobile-nav" id="mobile-nav">
+      <div class="mobile-nav-header">
+        <div class="logo">🚧 Signalisation</div>
+        <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="index.html" class="active">Rapport</a>
+        <a href="pages/admin.html" id="mobile-admin-link" style="display: none;">Admin</a>
+        <a href="#" id="mobile-login-link">Connexion</a>
+        <!-- Portal Link for mobile -->
+        <a href="https://vvaraldi.github.io/Orford_Patrouille/index.html" 
+           id="mobile-portal-link">
+          <svg style="width: 18px; height: 18px; margin-right: 8px; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+            <path d="M100 0 L200 200 L0 200 Z" fill="currentColor"/>
+          </svg>
+          Menu principal
+        </a>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Loading screen -->
+  <div id="loading" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Vérification de l'authentification...</p>
+    </div>
+  </div>
+  
+  <!-- Main content -->
+  <div id="main-content" class="main signalisation-main" style="display: none;">
+    
+    <!-- Survey selector -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">📋 Rapport existant ou nouveau</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <select class="form-select" id="survey-selector">
+            <option value="new">+ Nouveau rapport</option>
+            <!-- Existing surveys will be loaded here -->
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Survey form -->
+    <form id="signalisation-form">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">🚧 Rapport de signalisation</h2>
+        </div>
+        <div class="card-body">
+          
+          <!-- Status Section -->
+          <div class="form-section">
+            <div class="form-section-title">📊 Statut de la signalisation</div>
+            
+            <div class="form-group">
+              <label class="form-label" for="status-select">
+                Statut <span class="optional-label">(optionnel si photo fournie)</span>
+              </label>
+              <select class="form-select" id="status-select">
+                <option value="">-- Sélectionner un statut --</option>
+                <option value="ouverte">🟢 Ouverte</option>
+                <option value="attention-requise">🟡 Attention requise</option>
+                <option value="fermee">🔴 Fermée</option>
+              </select>
+            </div>
+            
+            <!-- Photo capture -->
+            <div class="form-group">
+              <label class="form-label">
+                Photo <span class="optional-label">(optionnel si statut sélectionné)</span>
+              </label>
+              <div class="photo-capture-container">
+                <input type="file" id="sign-photo" accept="image/*" capture="environment" class="file-input-hidden">
+                <button type="button" class="btn btn-secondary" id="capture-photo-btn">
+                  📷 Prendre une photo
+                </button>
+                <div id="photo-preview-container" style="display: none;">
+                  <img id="photo-preview" class="photo-preview" alt="Aperçu">
+                  <button type="button" class="btn btn-sm btn-danger" id="remove-photo-btn">
+                    ✕ Supprimer
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <p class="form-help-text">
+              <strong>Note:</strong> Au moins un statut OU une photo est requis. Les deux peuvent être fournis.
+            </p>
+          </div>
+          
+          <!-- Location Section -->
+          <div class="form-section">
+            <div class="form-section-title">📍 Localisation</div>
+            
+            <div class="form-group">
+              <label class="form-label" for="sector-select">Secteur <span class="required-star">*</span></label>
+              <select class="form-select" id="sector-select" required>
+                <option value="">-- Sélectionner un secteur --</option>
+                <option value="mont-orford">Mont-Orford</option>
+                <option value="giroux-nord">Mont Giroux Nord</option>
+                <option value="giroux-est">Mont Giroux Est</option>
+                <option value="alfred-desrochers">Mont Alfred-DesRochers</option>
+                <option value="remontees">Remontées mécaniques</option>
+                <option value="randonnee-alpine">Randonnée alpine</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="trail-select">Piste / Sentier <span class="required-star">*</span></label>
+              <select class="form-select" id="trail-select" required disabled>
+                <option value="">-- Sélectionner d'abord un secteur --</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Comments Section -->
+          <div class="form-section">
+            <div class="form-section-title">📝 Informations complémentaires</div>
+            
+            <div class="form-group">
+              <label class="form-label" for="comments">Commentaires <span class="optional-label">(optionnel)</span></label>
+              <textarea class="form-textarea" id="comments" rows="3" placeholder="Détails supplémentaires sur la signalisation..."></textarea>
+            </div>
+          </div>
+          
+          <!-- Inspector info (auto-filled) -->
+          <div class="form-section">
+            <div class="form-section-title">👤 Inspecteur</div>
+            
+            <div class="form-row two-cols">
+              <div class="form-group">
+                <label class="form-label" for="inspector-name">Nom</label>
+                <input type="text" class="form-input" id="inspector-name" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="report-datetime">Date et heure</label>
+                <input type="text" class="form-input" id="report-datetime" readonly>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div class="card-footer">
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="save-btn">
+              💾 Enregistrer le rapport
+            </button>
+            <button type="button" class="btn btn-secondary" id="modify-btn" style="display: none;">
+              ✏️ Sauvegarder les modifications
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Status messages -->
+    <div id="status-messages" class="status-messages"></div>
+    
+  </div>
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+  
+  <!-- Application Scripts -->
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/trails-data.js"></script>
+  <script src="js/signalisation.js"></script>
+</body>
+</html>

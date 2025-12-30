@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration - Signalisation Mont Orford</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚧</text></svg>">
+  <style>
+    /* Portal link styling */
+    .portal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+      text-decoration: none !important;
+    }
+    .portal-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .portal-logo {
+      width: 20px;
+      height: 20px;
+      opacity: 0.9;
+    }
+    .nav-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 0 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-logo">🚧 Signalisation</div>
+      <div class="nav-links">
+        <a href="../index.html">Rapport</a>
+        <a href="admin.html" class="active">Admin</a>
+        <a href="#" id="login-link">Déconnexion</a>
+        <!-- Portal Link -->
+        <span class="nav-divider" id="portal-divider"></span>
+        <a href="https://vvaraldi.github.io/Orford_Patrouille/index.html" 
+           id="portal-link" 
+           class="portal-link" 
+           title="Retour au menu principal">
+          <svg class="portal-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+            <path d="M100 0 L200 200 L0 200 Z" fill="currentColor"/>
+          </svg>
+          Menu principal
+        </a>
+      </div>
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+    </nav>
+    
+    <!-- Mobile menu -->
+    <div class="mobile-nav" id="mobile-nav">
+      <div class="mobile-nav-header">
+        <div class="logo">🚧 Signalisation</div>
+        <button class="mobile-nav-close" id="mobile-nav-close">✕</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="../index.html">Rapport</a>
+        <a href="admin.html" class="active">Admin</a>
+        <a href="#" id="mobile-login-link">Déconnexion</a>
+        <!-- Portal Link for mobile -->
+        <a href="https://vvaraldi.github.io/Orford_Patrouille/index.html" 
+           id="mobile-portal-link">
+          <svg style="width: 18px; height: 18px; margin-right: 8px; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+            <path d="M100 0 L200 200 L0 200 Z" fill="currentColor"/>
+          </svg>
+          Menu principal
+        </a>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Loading screen -->
+  <div id="loading" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Vérification de l'authentification...</p>
+    </div>
+  </div>
+  
+  <!-- Main content -->
+  <div id="main-content" class="main admin-main" style="display: none;">
+    
+    <div class="page-header">
+      <h1 class="page-title">Administration - Signalisation</h1>
+    </div>
+    
+    <!-- Signalisation Management -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">📋 Liste des rapports de signalisation</h2>
+        <div class="card-actions">
+          <!-- Filter by sector -->
+          <select class="form-select" id="filter-sector" style="width: auto; min-width: 160px;">
+            <option value="">Tous les secteurs</option>
+            <option value="mont-orford">Mont-Orford</option>
+            <option value="giroux-nord">Mont Giroux Nord</option>
+            <option value="giroux-est">Mont Giroux Est</option>
+            <option value="alfred-desrochers">Mont Alfred-DesRochers</option>
+            <option value="remontees">Remontées mécaniques</option>
+            <option value="randonnee-alpine">Randonnée alpine</option>
+          </select>
+          <!-- Sort by -->
+          <select class="form-select" id="sort-by" style="width: auto; min-width: 140px;">
+            <option value="date">Date création</option>
+            <option value="sector">Secteur</option>
+          </select>
+          <!-- Filter checkboxes -->
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-resolved">
+            <span>Afficher résolus</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-archived">
+            <span>Afficher archivés</span>
+          </label>
+          <button class="btn btn-secondary btn-sm" id="refresh-btn">
+            🔄 Actualiser
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-container">
+          <table class="table" id="signalisations-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Secteur</th>
+                <th>Piste</th>
+                <th>Statut</th>
+                <th>Inspecteur</th>
+                <th>État</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="signalisations-tbody">
+              <tr>
+                <td colspan="7" class="text-center">Chargement des rapports...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signalisation Detail Modal -->
+    <div class="modal" id="signalisation-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <h3 class="modal-title">Détails du rapport de signalisation</h3>
+          <button class="modal-close" id="close-signalisation-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="signalisation-modal-body">
+          <!-- Content loaded dynamically -->
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-left">
+            <label class="checkbox-label">
+              <input type="checkbox" id="modal-resolved-checkbox">
+              <span>Résolu</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="modal-archived-checkbox">
+              <span>Archivé</span>
+            </label>
+          </div>
+          <div class="modal-footer-right">
+            <button class="btn btn-primary" id="save-admin-btn">💾 Enregistrer</button>
+            <button class="btn btn-secondary" id="close-signalisation-btn">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+  
+  <!-- Application Scripts -->
+  <script src="../js/common.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/trails-data.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>
