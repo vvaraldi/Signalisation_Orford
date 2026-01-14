@@ -1,6 +1,7 @@
 /**
  * signalisation.js
  * Signalisation report form functionality
+ * Updated: Date/Time fields now match Infraction_Orford format
  */
 
 class SignalisationForm {
@@ -37,7 +38,10 @@ class SignalisationForm {
     this.trailSelect = document.getElementById('trail-select');
     this.comments = document.getElementById('comments');
     this.inspectorName = document.getElementById('inspector-name');
-    this.reportDatetime = document.getElementById('report-datetime');
+    
+    // UPDATED: Separate date and time fields (like Infraction_Orford)
+    this.reportDate = document.getElementById('report-date');
+    this.reportTime = document.getElementById('report-time');
     
     // Photo elements
     this.photoInput = document.getElementById('sign-photo');
@@ -68,9 +72,18 @@ class SignalisationForm {
     // Set inspector name
     this.inspectorName.value = this.userData.name || '';
     
-    // Set current date and time
+    // UPDATED: Set current date and time using separate fields (like Infraction_Orford)
     const now = new Date();
-    this.reportDatetime.value = formatDate({ toDate: () => now });
+    
+    // Use local date components instead of toISOString() which uses UTC
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    this.reportDate.value = `${year}-${month}-${day}`;
+    
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    this.reportTime.value = `${hours}:${minutes}`;
   }
   
   /**
