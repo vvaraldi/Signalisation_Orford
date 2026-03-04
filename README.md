@@ -1,8 +1,5 @@
 # Signalisation_Orford
 
-
-To be done : Default date is the date at time zone london !
-
 Application web de gestion des rapports de signalisation pour le Mont Orford.
 
 ## 🚧 Description
