@@ -235,7 +235,7 @@ function updateUIForRole(role) {
   const mobileLoginLink = document.getElementById('mobile-login-link');
   
   // Show admin link for admins
-  if (role === 'admin') {
+  if (role === 'admin' || role === 'system_admin') {
     if (adminLink) adminLink.style.display = 'block';
     if (mobileAdminLink) mobileAdminLink.style.display = 'block';
   }
@@ -275,7 +275,7 @@ function getCurrentUserId() {
  * @returns {boolean} True if admin
  */
 function isAdmin() {
-  return currentUserData && currentUserData.role === 'admin';
+  return currentUserData && ( currentUserData.role === 'admin' || currentUserData.role === 'system_admin' );
 }
 
 /**
